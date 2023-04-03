@@ -1,166 +1,54 @@
-import React, { useContext, useState } from 'react';
- import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../Components/Context/AuthContext';
+import {
+  useDisclosure,
+  Button,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  ModalCloseButton,
+  Image,
+  Modal,
+  ModalFooter,
+  Text,
+  Heading,
+} from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+import { LoginForm } from "../Components/LoginForm";
+function Login() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-import './LoginForm.css';
-import './SignupForm.css';
-
-const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const {isAuth ,setAuth,setToken,}=useContext(AuthContext)
-  const Nevigate=useNavigate()
-  
-
-
-  const handleUsernameChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const userData={
-      email, password
-    }
-              
-    fetch("https://reqres.in/api/login",{
-      method:"POST",
-      body:JSON.stringify(userData),
-      headers: {"Content-Type" : "application/json"}
-    })
-    .then((res)=>{
-       if(res.status===200)
-       {
-         setAuth(true)
-         Nevigate('/')
-
-       }
-       return res.json()
-    }).then((authtoken)=>{
-      // console.log(authtoken)
-      setToken(authtoken.token)
-      
-    })
-   
-
-   
-  };
-
-//  console.log("auth" ,isAuth)
-
-  return  isAuth?<button style={{
-      margin:"0 auto",
-      backgroundColor: "#007bff",
-      color: "#fff",
-      border: "none",
-      padding: "5px 10px",
-      borderRadius: "5px",
-      cursor: "pointer",
-    }} onClick={()=>setAuth(false)}>Logout</button>: (
-   
+  return (
     <>
-    <form onSubmit={handleSubmit} className="login-form">
-      <div className="form-group">
-        <label htmlFor="username">Email:</label>
-        <input
-          type="text"
-          id="username"
-          value={email}
-          onChange={handleUsernameChange}
-          className="form-control"
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={handlePasswordChange}
-          className="form-control"
-        />
-      </div>
-      <button type="submit" className="btn btn-primary">Log in</button>
-    </form>
-    <div style={{border:"1px solid gray", textAlign:"center", width:"31%", margin:"auto", marginTop:"50px", borderRadius:"10px", padding:"30px"}}>
-        <h2>Login credentials </h2>
-        <p>Email- eve.holt@reqres.in</p>
-        <p>Password- cityslicka</p>
-        
-      </div>
+      <Button colorScheme="black" variant="link" onClick={onOpen}>
+        Profile
+      </Button>
+
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent style={{ width: "400px" }}>
+          <Image
+            src="https://cdn-fsly.yottaa.net/5d669b394f1bbf7cb77826ae/www.bathandbodyworks.com/v~4b.21a/on/demandware.static/-/Sites-BathAndBodyWorks-Library/default/dw8c1e9664/images/loyalty/xcat_rewards-update-evergreen_sp1_lacb.jpg?yocs=s_"
+            alt="error"
+          />
+
+          <ModalCloseButton />
+          <ModalBody>
+            <Heading style={{ margin: "25px 0px 20px 0px" }} size="md">
+              Login
+            </Heading>
+            <LoginForm onclose={onClose}/>
+          </ModalBody>
+
+          <ModalFooter>
+            <Text fontSize="md">
+              Not registered yet?
+              <Link onClick={onClose} style={{ color: "#ff3f6c" }} to="/signup">
+                Create an Account
+              </Link>
+            </Text>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
-};
-
-
-
-// const SignupForm = () => {
-//   const [username, setUsername] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [confirmPassword, setConfirmPassword] = useState('');
-
-//   const handleUsernameChange = (event) => {
-//     setUsername(event.target.value);
-//   };
-
-//   const handlePasswordChange = (event) => {
-//     setPassword(event.target.value);
-//   };
-
-//   const handleConfirmPasswordChange = (event) => {
-//     setConfirmPassword(event.target.value);
-//   };
-
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     // handle form submission logic
-//   };
-
-//   return (
-//     <div style={{width:"600px"}}>
-//       <form onSubmit={handleSubmit} className="signup-form">
-//       <div className="form-group">
-//         <label htmlFor="username">Username:</label>
-//         <input
-//           type="text"
-//           id="username"
-//           value={username}
-//           onChange={handleUsernameChange}
-//           className="form-control"
-//         />
-//       </div>
-//       <div className="form-group">
-//         <label htmlFor="password">Password:</label>
-//         <input
-//           type="password"
-//           id="password"
-//           value={password}
-//           onChange={handlePasswordChange}
-//           className="form-control"
-//         />
-//       </div>
-//       <div className="form-group">
-//         <label htmlFor="confirm-password">Confirm password:</label>
-//         <input
-//           type="password"
-//           id="confirm-password"
-//           value={confirmPassword}
-//           onChange={handleConfirmPasswordChange}
-//           className="form-control"
-//         />
-//       </div>
-//       <button type="submit" className="btn btn-primary">Sign up</button>
-//     </form>
-//     <div>
-//       <Footer/>
-//     </div>
-//     </div>
-//   );
-// };
-
-export { LoginForm };
-
+}
+export default Login;
